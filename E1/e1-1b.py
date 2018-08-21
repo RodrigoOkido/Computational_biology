@@ -1,5 +1,3 @@
-#Recebe uma subsquencia, gera sua complementar,
-#e verifica se sua complementar é palidromica com a original.
 def complement_checkpalindrome(subsequence):
     original = subsequence
     modified = list(subsequence)
@@ -40,9 +38,9 @@ def main():
 
     j = 0
     for i in content:
-        subseq = content[j:j+9]
+        subseq = content[j:j+8]
         #print len(subseq)
-        if "N" not in subseq and len(subseq) == 9:
+        if "N" not in subseq and len(subseq) == 8:
             if complement_checkpalindrome(subseq) == True:
                 val = palindrome.get(subseq)
                 if val == None:

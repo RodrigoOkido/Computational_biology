@@ -115,6 +115,7 @@ def mutate_reg_complement(sequence):
 def main():
     #Store the registry number
     registry = "00252745"
+    print "MEU CARTAO: 00252745"
     #Generate sequence of the registry
     myRegistry_sequence = generate_sequence(registry)
     print myRegistry_sequence
