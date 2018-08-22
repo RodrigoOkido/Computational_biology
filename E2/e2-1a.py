@@ -1,11 +1,12 @@
+similarity_id = []
 def needleman_wunsch(seq1, seq2):
 
     #Score
     score = 0
 
     #Transform in list
-    seq1_list = list(seq1)
-    seq2_list = list(seq2)
+    seq1_list = list(seq1) #column
+    seq2_list = list(seq2) #lines
 
     #Take the size of each sequence
     size_seq1 = len(seq1) + 1
@@ -46,9 +47,15 @@ def needleman_wunsch(seq1, seq2):
                 needle_table[x+1][y+1] = check_max(seq1_list, seq2_list, x, y, needle_table[x][y], needle_table[x][y+1], needle_table[x+1][y] )
 
 
-        #Calculate score
+        #Calculate score and check identity
         x_calc = size_seq2-1
         y_calc = size_seq1-1
+        score = needle_table[x_calc][y_calc]
+
+        id1 = ""
+        id2 = ""
+
+        #CALCULATE SCORE
         while x_calc != 0 and y_calc != 0:
             path1 = needle_table[x_calc-1][y_calc-1]
             path2 = needle_table[x_calc][y_calc-1]
@@ -56,29 +63,45 @@ def needleman_wunsch(seq1, seq2):
             if x_calc == 0 and y_calc != 0:
                 score = score + path2
                 y_calc = y_calc - 1
+                id2 += "-"
             elif x_calc != 0 and y_calc == 0:
                 score = score + path3
                 x_calc = x_calc - 1
+                id1 += "-"
             elif path1 > path2 and path1 > path3:
                 score = score + path1
                 x_calc = x_calc -1
                 y_calc = y_calc -1
+                id1 += seq1_list[y_calc]
+                id2 += seq2_list[x_calc]
+
             elif path2 > path1 and path2 > path3:
                 score = score + path2
                 x_calc = x_calc
                 y_calc = y_calc -1
+                id1 += seq1_list[x_calc]
+                id2 += "-"
             else:
                 score = score + path3
                 x_calc = x_calc -1
                 y_calc = y_calc
+                id1 += "-"
+                id2 += seq2_list[y_calc]
+
+
+        print needle_table
+        print id1[::-1]
+        print id2[::-1]
+        global similarity_id
+        similarity_id.append(check_identity(id1,id2))
 
         return score
-        print needle_table
 
     else:
         return None
 
 
+#Return the max value between the 3 possibilities of the needleman table.
 def check_max (sequence_list1, sequence_list2, x, y, pos_table, pos_table_x, pos_table_y):
 
     #Points
@@ -88,13 +111,31 @@ def check_max (sequence_list1, sequence_list2, x, y, pos_table, pos_table_x, pos
 
     if sequence_list1[y] == sequence_list2[x]:
         #print "IGUAL"
-        return max(match + pos_table, match + pos_table_x, match + pos_table_y)
-    elif sequence_list1[y] in sequence_list2:
-        #print "GAP"
-        return max(pos_table + gap, pos_table_x + gap, pos_table_y + gap)
+        return max(match + pos_table, gap + pos_table_x, gap + pos_table_y)
     else:
         #print "MISMATCH"
-        return max(pos_table + mismatch, pos_table_x + mismatch, pos_table_y + mismatch)
+        return max(pos_table + mismatch, pos_table_x + gap, pos_table_y + gap)
+
+
+#Return the identity between the 2 sequences
+def check_identity(str_id1, str_id2):
+    identity1 = list(str_id1)
+    identity2 = list(str_id2)
+    final_score = 0
+
+    for i in range(len(identity1)):
+        if identity1[i] == identity2[i]:
+            final_score = final_score + 5
+        elif identity1[i] != identity2[i]:
+            final_score = final_score - 3
+        elif identity1[i] == "-":
+            final_score = final_score - 4
+        else:
+            final_score = final_score - 4
+
+    return final_score
+
+
 
 def main():
     #Open and read file.
@@ -168,23 +209,24 @@ def main():
 
 
     cmp1 = needleman_wunsch(content1,content2) #human - horse
-    cmp2 = needleman_wunsch(content1,content3) #human - chicken
-    cmp3 = needleman_wunsch(content1,content4) #human - cow
-    cmp4 = needleman_wunsch(content1,content5) #human - deer
-    cmp5 = needleman_wunsch(content1,content6) #human - pig
-    cmp6 = needleman_wunsch(content1,content7) #human - trout
-    cmp7 = needleman_wunsch(content1,content8) #human - wolf
+    # cmp2 = needleman_wunsch(content1,content3) #human - chicken
+    # cmp3 = needleman_wunsch(content1,content4) #human - cow
+    # cmp4 = needleman_wunsch(content1,content5) #human - deer
+    # cmp5 = needleman_wunsch(content1,content6) #human - pig
+    # cmp6 = needleman_wunsch(content1,content7) #human - trout
+    # cmp7 = needleman_wunsch(content1,content8) #human - wolf
     results["Human - Horse"] = cmp1
-    results["Human - Chicken"] = cmp2
-    results["Human - Cow"] = cmp3
-    results["Human - Deer"] = cmp4
-    results["Human - Pig"] = cmp5
-    results["Human - Trout"] = cmp6
-    results["Human - Wolf"] = cmp7
+    # results["Human - Chicken"] = cmp2
+    # results["Human - Cow"] = cmp3
+    # results["Human - Deer"] = cmp4
+    # results["Human - Pig"] = cmp5
+    # results["Human - Trout"] = cmp6
+    # results["Human - Wolf"] = cmp7
 
-    print results
+    #print results
     key_max = max(results.keys(), key=(lambda k: results[k]))
     print results[key_max]
+    print max(similarity_id)
 
 if __name__ == "__main__":
     main()
