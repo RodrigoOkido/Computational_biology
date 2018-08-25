@@ -1,3 +1,4 @@
+identity_score = 0
 def smith_waterman(seq1, seq2):
     #Score
     score = 0
@@ -17,10 +18,11 @@ def smith_waterman(seq1, seq2):
         for i in range(size_seq2):
             smith_watertable[i] = [0] * (size_seq1) #columns
 
-
+        #Store the biggest value of the table
         biggest_value = -1
+        #Save the index of this biggest value
         x_index_biggest_number = -1
-        y_index_biggest_number - -1
+        y_index_biggest_number = -1
         #Loop to fill the rest with values
         for x in range(size_seq2):
             if x+1 == size_seq2:
@@ -29,13 +31,13 @@ def smith_waterman(seq1, seq2):
                 if y+1 == size_seq1:
                     break
                 smith_watertable[x+1][y+1] = check_max(seq1_list, seq2_list, x, y, smith_watertable[x][y], smith_watertable[x][y+1], smith_watertable[x+1][y] )
-                if smith_waterman[x+1][y+1] > biggest_value:
-                    biggest_value = smith_waterman[x+1][y+1]
+                if smith_watertable[x+1][y+1] > biggest_value:
+                    biggest_value = smith_watertable[x+1][y+1]
                     x_index_biggest_number = x+1
                     y_index_biggest_number = y+1
 
 
-        #Calculate score and check identity
+        #Calculate score and check identity starting in the biggest value
         score = smith_watertable[x_index_biggest_number][y_index_biggest_number]
         id1 = ""
         id2 = ""
@@ -45,7 +47,7 @@ def smith_waterman(seq1, seq2):
         path3 = smith_watertable[x_index_biggest_number-1][y_index_biggest_number]
 
         #CALCULATE SCORE
-        while path1 != 0 and path2 != 0 and path3 != 0:
+        while path1 != 0 or path2 != 0 or path3 != 0:
             if x_index_biggest_number == 0 and y_index_biggest_number != 0:
                 score = score + path2
                 y_index_biggest_number = y_index_biggest_number - 1
@@ -56,32 +58,34 @@ def smith_waterman(seq1, seq2):
                 id1 += "-"
             elif path1 > path2 and path1 > path3:
                 score = score + path1
-                x_index_biggest_number = x_index_biggest_number -1
-                y_index_biggest_number = y_index_biggest_number -1
                 id1 += seq1_list[y_index_biggest_number]
                 id2 += seq2_list[x_index_biggest_number]
+                x_index_biggest_number = x_index_biggest_number -1
+                y_index_biggest_number = y_index_biggest_number -1
             elif path2 > path1 and path2 > path3:
                 score = score + path2
+                id1 += seq1_list[y_index_biggest_number]
+                id2 += "-"
                 x_index_biggest_number = x_index_biggest_number
                 y_index_biggest_number = y_index_biggest_number -1
-                id1 += seq1_list[x_index_biggest_number]
-                id2 += "-"
+
             else:
                 score = score + path3
+                id1 += "-"
+                id2 += seq2_list[x_index_biggest_number]
                 x_index_biggest_number = x_index_biggest_number -1
                 y_index_biggest_number = y_index_biggest_number
-                id1 += "-"
-                id2 += seq2_list[y_index_biggest_number]
+
 
             path1 = smith_watertable[x_index_biggest_number-1][y_index_biggest_number-1]
             path2 = smith_watertable[x_index_biggest_number][y_index_biggest_number-1]
             path3 = smith_watertable[x_index_biggest_number-1][y_index_biggest_number]
 
-        print smith_watertable
+        #print smith_watertable
         print id1[::-1]
         print id2[::-1]
-        global similarity_id
-        similarity_id.append(check_identity(id1,id2))
+        global identity_score
+        identity_score = check_identity(id1,id2)
 
         return score
 
@@ -99,10 +103,10 @@ def check_max (sequence_list1, sequence_list2, x, y, pos_table, pos_table_x, pos
 
     if sequence_list1[y] == sequence_list2[x]:
         #print "IGUAL"
-        return max(match + pos_table, gap + pos_table_x, gap + pos_table_y)
+        return max(0, match + pos_table, gap + pos_table_x, gap + pos_table_y)
     else:
         #print "MISMATCH"
-        return max(pos_table + mismatch, pos_table_x + gap, pos_table_y + gap)
+        return max(0, pos_table + mismatch, pos_table_x + gap, pos_table_y + gap)
 
 
 #Return the identity between the 2 sequences
@@ -111,7 +115,7 @@ def check_identity(str_id1, str_id2):
     identity2 = list(str_id2)
     final_score = 0
 
-    for i in range(len(identity1)):
+    for i in range(len(identity2)):
         if identity1[i] == identity2[i]:
             final_score = final_score + 1
         elif identity1[i] != identity2[i]:
@@ -133,27 +137,26 @@ def main():
     results = {}
 
 
-    with open("human.txt") as file:
+    with open("glabrata.txt") as file:
         next(file)
         for line in file:
             line = line.rstrip('\n')
             content1+= line
 
-    with open("horse.txt") as file2:
+    with open("homosapiens.txt") as file2:
         next(file2)
         for line1 in file2:
             line1 = line1.rstrip('\n')
-            content2= line1
-
-
+            content2+= line1
 
     cmp1 = smith_waterman(content1,content2)
-    results["Human - Horse"] = cmp1
+    results["Human - Glabrata"] = cmp1
 
     #print results
     key_max = max(results.keys(), key=(lambda k: results[k]))
-    print results[key_max]
-    print max(similarity_id)
+    print "Score table (Smith Waterman): ",results[key_max]
+    print "Score identidade: ", identity_score
+
 
 if __name__ == "__main__":
     main()
