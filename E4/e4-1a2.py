@@ -1,14 +1,14 @@
-distance = {}
+dist_specie = {}
 
 #Executes the UPGMA Method
 def upgma_method(matrix, assoc_label):
     # Keep running until have no more element in table
     while len(assoc_label) > 1:
         # Locate lowest cell in the table
-        x, y = find_lowest_distance(matrix)
+        x, y = find_lowest_distance(matrix, assoc_label)
 
         # Update matrix after finding the lowest distance (cluster)
-        update_matrix(matrix, assoc_label, x, y)
+        update_matrix(matrix, x, y)
 
         # Update the label
         join_labels(assoc_label, x, y)
@@ -18,7 +18,7 @@ def upgma_method(matrix, assoc_label):
 
 
 # Locates the cell with the lowest distance in the matrix
-def find_lowest_distance(matrix):
+def find_lowest_distance(matrix, labels):
     # initialize with high number for initialization purpose
     lowest_distance = 1000000000
 
@@ -32,12 +32,16 @@ def find_lowest_distance(matrix):
                 lowest_distance = matrix[i][j]
                 x, y = i, j
 
+
+    calc_dist = labels[y] + " - " + labels[x]
+    dist_specie[calc_dist] = lowest_distance/2
+
     # Return coordinates
     return x, y
 
 
 # Update matrix after finding the lowest distance (cluster)
-def update_matrix(matrix, labels, a, b):
+def update_matrix(matrix, a, b):
     # Swap if the indices are not ordered
     if b < a:
         a, b = b, a
@@ -56,10 +60,10 @@ def update_matrix(matrix, labels, a, b):
     # We get the rest of the values from row i
     for i in range(b+1, len(matrix)):
         matrix[i][a] = (matrix[i][a]+matrix[i][b])/2
-        # Remove the (now redundant) second index column entry
+        # Remove the column
         del matrix[i][b]
 
-    # Remove the (now redundant) second index row
+    # Remove row
     del matrix[b]
 
 
@@ -87,7 +91,7 @@ def main():
         ]
 
     print upgma_method(upgma_matrix, assoc_label)
-    print distance
+    print "\nDistance between especies:\n", dist_specie
 
 if __name__ == "__main__":
     main()
