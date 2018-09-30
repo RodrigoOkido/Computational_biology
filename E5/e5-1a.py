@@ -1,81 +1,44 @@
 #Hash containing the distance between species
 dist_species = {}
+dist_calculated_nodes = {}
 
-#Executes the Neighbor Joining Method
-def neighbor_joining(matrix, assoc_label):
-    # # Keep running until have no more element in matrix
-    # while len(assoc_label) > 1:
-    #     # Locate the coordinates with the lowest number in the matrix
-    #     x, y = find_lowest_distance(matrix, assoc_label)
-    #
-    #     # Update matrix after finding the lowest distance (cluster)
-    #     update_matrix(matrix, x, y)
-    #
-    #     # Update the label
-    #     join_label(assoc_label, x, y)
-    #
-    # # Return the final label
-    # return assoc_label[0]
+# Calculates for each specie the distance for all others species.
+# Takes the lowest pair distance species and return their coordinates.
+# (Step 1 and Step 2 are made in this function)
+def calculate_distance(matrix, labels):
+    # initialize with high number for initialization purpose
+    lowest_pair_dist = 1000000000
+    s_dist = []
+    pair_distances = []
 
+    # index coordinates
+    x = 0
+    y = 0
 
-# Locates the cell with the lowest distance in the matrix
-def find_lowest_pair_distance(matrix, labels):
+    # Built list adding all distances between species (Step 1)
+    for i in range(len(matrix)):
+        dist = 0
+        for j in range(len(matrix[i])):
+            if i != j:
+                dist += matrix[j][i]
 
-    # # initialize with high number for initialization purpose
-    # lowest_distance = 1000000000
-    # # index coordinates
-    # x = 0
-    # y = 0
-    #
-    # for i in range(len(matrix)):
-    #     for j in range(len(matrix[i])):
-    #         if matrix[i][j] < lowest_distance:
-    #             lowest_distance = matrix[i][j]
-    #             x, y = i, j
-    #
-    # # Calculate the distance between the two species with the lowest distance
-    # calc_dist = labels[y] + " - " + labels[x]
-    # dist_species[calc_dist] = lowest_distance/2
-    #
-    # # Return coordinates
-    # return x, y
+        s_dist.append(dist)
 
 
-# Update matrix after finding the lowest distance (cluster)
-def update_matrix(matrix, a, b):
+    # Take the species with the lowest distance (Step 2)
+    for i in range(len(matrix)):
+        dist = 0
+        for j in range(len(matrix[i])):
+            if i != j:
+                dist = matrix[i][j] - s_dist[i] - s_dist[j]
+                pair_distances.append(dist)
+                if dist < lowest_pair_dist:
+                    lowest_pair_dist = dist
+                    x, y = i, j
 
-    # row = []
-    #
-    # # Swap if the indices are not ordered
-    # if b < a:
-    #     a, b = b, a
-    #
-    # # Updating row (A, i), where i < a
-    # for i in range(0, a):
-    #     row.append((matrix[a][i] + matrix[b][i])/2)
-    #
-    # matrix[a] = row
-    #
-    # # Update entire column (i, A), where i > a
-    # for i in range(a+1, b):
-    #     matrix[i][a] = (matrix[i][a] + matrix[b][i])/2
-    #
-    # # Rest values from row i
-    # for i in range(b+1, len(matrix)):
-    #     matrix[i][a] = (matrix[i][a] + matrix[i][b])/2
-    #     # Remove the column
-    #     del matrix[i][b]
-    #
-    # # Remove row
-    # del matrix[b]
-
-
-# Function to join two label (cluster)
-def join_label(labels, a, b):
-    # # Join the labels in the first index
-    # labels[a] = "[" + labels[a] + " - " + labels[b] + "]"
-    # del labels[b]
-
+    pair = "[" + labels[x] + " - " + labels[y] + "]"
+    dist_species[pair] = lowest_pair_dist
+    return x,y
 
 
 def main():
@@ -85,16 +48,17 @@ def main():
     # Building the matrix. This will be an triangular matrix. The other half
     # is symmetric and the main diagonal is filled with zeros.
     nj_matrix = [
-        [],
-        [0.1890],
-        [0.1100, 0.1790],
-        [0.1130, 0.1920, 0.09405],
-        [0.2150, 0.2110, 0.2050, 0.2140]
+        [0, 0.1890, 0.1100, 0.1130, 0.2150],
+        [0.1890, 0 , 0.1790, 0.1920, 0.2110],
+        [0.1100, 0.1790, 0 , 0.09405, 0.2050],
+        [0.1130, 0.1920, 0.09405, 0, 0.2140],
+        [0.2150, 0.2110, 0.2050, 0.2140, 0]
         ]
 
+    calculate_distance(nj_matrix, assoc_label)
     # Printing results after Neighbor Joining Method.
-    print neighbor_joining(upgma_matrix, assoc_label)
-    print "\nDistance between especies:\n", dist_species
+    # print neighbor_joining(upgma_matrix, assoc_label)
+    # print "\nDistance between especies:\n", dist_species
 
 if __name__ == "__main__":
     main()

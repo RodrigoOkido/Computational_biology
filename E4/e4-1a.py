@@ -1,18 +1,18 @@
-#Hash containing the distance between species
+# Hash containing the distance between species.
 dist_species = {}
 
-#Executes the UPGMA Method
+# Executes the UPGMA Method.
 def upgma_method(matrix, assoc_label):
-    # Keep running until have no more element in matrix
+    # Keep running until have no more element in matrix.
     while len(assoc_label) > 1:
-        # Locate the coordinates with the lowest number in the matrix
+        # Locate the coordinates with the lowest number in the matrix.
         x, y = find_lowest_distance(matrix, assoc_label)
 
-        # Update matrix after finding the lowest distance (cluster)
-        update_matrix(matrix, x, y)
+        # Update matrix after finding the lowest distance (cluster).
+        # After updating matrix, the labels are updated (joining the labels
+        # with the lowest distance).
+        update_matrix(matrix, assoc_label, x, y)
 
-        # Update the label
-        join_label(assoc_label, x, y)
 
     # Return the final label
     return assoc_label[0]
@@ -20,11 +20,12 @@ def upgma_method(matrix, assoc_label):
 
 # Locates the coordinates (i,j) with the lowest value (distance) in the matrix.
 # The result (coordinates i,j) will be stored in x,y.
+# (Step 1 of UPGMA)
 def find_lowest_distance(matrix, labels):
 
-    # initialize with high number for initialization purpose
+    # Initialize with high number for initialization purpose.
     lowest_distance = 1000000000
-    # index coordinates
+    # Index coordinates.
     x = 0
     y = 0
 
@@ -34,46 +35,45 @@ def find_lowest_distance(matrix, labels):
                 lowest_distance = matrix[i][j]
                 x, y = i, j
 
-    # Calculate the distance between the two species with the lowest distance
+    # Calculate the distance between the two species with the lowest distance.
     calc_dist = labels[y] + " - " + labels[x]
     dist_species[calc_dist] = lowest_distance/2
 
-    # Return coordinates
+    # Return coordinates.
     return x, y
 
 
-# Update matrix after finding the lowest distance (cluster)
-def update_matrix(matrix, a, b):
+# Update matrix after finding the lowest distance (cluster).
+# (Step 2 of UPGMA)
+def update_matrix(matrix, labels, a, b):
 
     row = []
 
-    # Swap if the indices are not ordered
+    # Swap if the indices are not ordered.
     if b < a:
         a, b = b, a
 
-    # Updating row (A, i), where i < a
+    # Updating row (a, i), where i < a.
     for i in range(0, a):
         row.append((matrix[a][i] + matrix[b][i])/2)
 
     matrix[a] = row
 
-    # Update entire column (i, A), where i > a
+    # Update entire column (i, a), where i > a.
     for i in range(a+1, b):
         matrix[i][a] = (matrix[i][a] + matrix[b][i])/2
 
-    # Rest values from row i
+    # Rest values from row i.
     for i in range(b+1, len(matrix)):
         matrix[i][a] = (matrix[i][a] + matrix[i][b])/2
-        # Remove the column
+        # Remove the column.
         del matrix[i][b]
 
-    # Remove row
+    # Remove row.
     del matrix[b]
 
-
-# Function to join two label (cluster)
-def join_label(labels, a, b):
-    # Join the labels in the first index
+    # Joins label (cluster) and delete the redundancy after joining.
+    # (Step 3 of UPGMA)
     labels[a] = "[" + labels[a] + " - " + labels[b] + "]"
     del labels[b]
 
