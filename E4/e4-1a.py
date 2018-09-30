@@ -33,7 +33,7 @@ def find_lowest_distance(matrix, labels):
                 lowest_distance = matrix[i][j]
                 x, y = i, j
 
-
+    # Calculate the distance between the two species with the lowest distance
     calc_dist = labels[y] + " - " + labels[x]
     dist_species[calc_dist] = lowest_distance/2
 
@@ -43,23 +43,26 @@ def find_lowest_distance(matrix, labels):
 
 # Update matrix after finding the lowest distance (cluster)
 def update_matrix(matrix, a, b):
+
+    row = []
+
     # Swap if the indices are not ordered
     if b < a:
         a, b = b, a
 
-    # Updating row (A, i), where i < A
-    row = []
+    # Updating row (A, i), where i < a
     for i in range(0, a):
         row.append((matrix[a][i] + matrix[b][i])/2)
+
     matrix[a] = row
 
-    # Update entire column (i, A), where i > A
+    # Update entire column (i, A), where i > a
     for i in range(a+1, b):
-        matrix[i][a] = (matrix[i][a]+matrix[b][i])/2
+        matrix[i][a] = (matrix[i][a] + matrix[b][i])/2
 
     # Rest values from row i
     for i in range(b+1, len(matrix)):
-        matrix[i][a] = (matrix[i][a]+matrix[i][b])/2
+        matrix[i][a] = (matrix[i][a] + matrix[i][b])/2
         # Remove the column
         del matrix[i][b]
 
@@ -69,10 +72,6 @@ def update_matrix(matrix, a, b):
 
 # Function to join two label (cluster)
 def join_label(labels, a, b):
-    # Swap if the indices are not ordered
-    if b < a:
-        a, b = b, a
-
     # Join the labels in the first index
     labels[a] = "[" + labels[a] + " - " + labels[b] + "]"
     del labels[b]
