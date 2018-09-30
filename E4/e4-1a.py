@@ -18,7 +18,8 @@ def upgma_method(matrix, assoc_label):
     return assoc_label[0]
 
 
-# Locates the cell with the lowest distance in the matrix
+# Locates the coordinates (i,j) with the lowest value (distance) in the matrix.
+# The result (coordinates i,j) will be stored in x,y.
 def find_lowest_distance(matrix, labels):
 
     # initialize with high number for initialization purpose
@@ -82,8 +83,8 @@ def main():
     # Association of each element of the matrix.
     assoc_label = ["GOR", "ORANG", "HUM", "CHI", "GIB"]
 
-    # Building the matrix. This will be a triangular matrix due to the fact that
-    # the other half is symmetric and the main diagonal filled with zeros.
+    # Building the matrix. This will be an triangular matrix. The other half
+    # is symmetric and the main diagonal is filled with zeros.
     upgma_matrix = [
         [],
         [0.1890],
