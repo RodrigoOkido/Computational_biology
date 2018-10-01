@@ -1,6 +1,8 @@
 #Hash containing the distance between species
 dist_species = {}
-dist_calculated_nodes = {}
+dist_calculated_nodes = []
+s_dist = []
+node_counter = 0
 
 # Calculates for each specie the distance for all others species.
 # Takes the lowest pair distance species and return their coordinates.
@@ -8,7 +10,6 @@ dist_calculated_nodes = {}
 def calculate_distance(matrix, labels):
     # initialize with high number for initialization purpose
     lowest_pair_dist = 1000000000
-    s_dist = []
     pair_distances = []
 
     # index coordinates
@@ -22,8 +23,8 @@ def calculate_distance(matrix, labels):
             if i != j:
                 dist += matrix[j][i]
 
-        s_dist.append(dist)
-
+        result_specie = dist/(len(matrix[i]) - 2)
+        s_dist.append(result_specie)
 
     # Take the species with the lowest distance (Step 2)
     for i in range(len(matrix)):
@@ -36,9 +37,23 @@ def calculate_distance(matrix, labels):
                     lowest_pair_dist = dist
                     x, y = i, j
 
-    pair = "[" + labels[x] + " - " + labels[y] + "]"
+
+    pair = "[" + labels[x] + " - " + labels[y] + "]"
     dist_species[pair] = lowest_pair_dist
     return x,y
+
+
+
+# Create a "Node" with the distance of the pair found on step 2
+# (Step 3)
+def create_node (matrix, labels, x, y):
+    s_xU = matrix[x][y]/2 + ((s_dist[x] - s_dist[y])/2)
+    s_yU = matrix[x][y]/2 + ((s_dist[y] - s_dist[x])/2)
+
+    node = "[U{0} : ".format(node_counter) + labels[x] + ": {0} || ".format(s_xU) + labels[y] + ": {0} ]".format(s_yU)
+    dist_calculated_nodes.append(node)
+    print dist_calculated_nodes
+
 
 
 def main():
@@ -49,13 +64,14 @@ def main():
     # is symmetric and the main diagonal is filled with zeros.
     nj_matrix = [
         [0, 0.1890, 0.1100, 0.1130, 0.2150],
-        [0.1890, 0 , 0.1790, 0.1920, 0.2110],
-        [0.1100, 0.1790, 0 , 0.09405, 0.2050],
+        [0.1890, 0, 0.1790, 0.1920, 0.2110],
+        [0.1100, 0.1790, 0, 0.09405, 0.2050],
         [0.1130, 0.1920, 0.09405, 0, 0.2140],
         [0.2150, 0.2110, 0.2050, 0.2140, 0]
         ]
 
-    calculate_distance(nj_matrix, assoc_label)
+    ix, iy = calculate_distance(nj_matrix, assoc_label)
+    create_node(nj_matrix, assoc_label, ix, iy)
     # Printing results after Neighbor Joining Method.
     # print neighbor_joining(upgma_matrix, assoc_label)
     # print "\nDistance between especies:\n", dist_species
