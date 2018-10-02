@@ -33,7 +33,7 @@ def calculate_distance(matrix, labels):
         s_dist.append(result_specie)
 
     # Take the pair of species with the lowest distance (Step 2)
-    # If equals distances, choses the first
+    # If equals distances found, the first is chosen
     for i in range(len(matrix)):
         dist = 0
         for j in range(len(labels)):
@@ -51,7 +51,9 @@ def calculate_distance(matrix, labels):
 
 
 
-# Create a "Node" with the distance of the pair found on step 2
+# Create a "Node" with the distance of the pair found on step 2 and update the
+# matrix with the new distances. The labels are updated in the final and s_dist
+# values calculated before are erased for next iteration (if necessary).
 # (Step 3, 4 and 5)
 def create_node_and_update_matrix (matrix, labels, x, y):
     global node_counter
@@ -74,15 +76,20 @@ def create_node_and_update_matrix (matrix, labels, x, y):
     # Remove row.
     del matrix[y]
 
-
+    # Update label.
     labels[x] = "[U{0} : ".format(node_counter) + labels[x] + ": {0} || ".format(s_xU) + labels[y] + ": {0} ]".format(s_yU)
+    # Increment the node counter.
     node_counter = node_counter + 1
+    # Add this node to an list of calculated nodes.
     dist_calculated_nodes.append(labels[x])
+    # Delete one of the species (due to joining)
     del labels[y]
 
+    # Erase the list of s_dist for calculations again in the next iteration.
     del s_dist[:]
 
 
+# Executes the algorith Neighbor Joining
 def neighbor_joining(matrix, assoc_label):
     # Keep running until have no more element in matrix.
     while len(assoc_label) > 1:
