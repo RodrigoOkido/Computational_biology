@@ -77,11 +77,11 @@ def create_node_and_update_matrix (matrix, labels, x, y):
     del matrix[y]
 
     # Update label.
-    labels[x] = "[U{0} : ".format(node_counter) + labels[x] + ": {0} || ".format(s_xU) + labels[y] + ": {0} ]".format(s_yU)
+    node = "[U{0} : ".format(node_counter) + labels[x] + ": {0} || ".format(s_xU) + labels[y] + ": {0} ]".format(s_yU)
     # Increment the node counter.
     node_counter = node_counter + 1
     # Add this node to an list of calculated nodes.
-    dist_calculated_nodes.append(labels[x])
+    dist_calculated_nodes.append(node)
     # Delete one of the species (due to joining)
     del labels[y]
 
@@ -120,8 +120,9 @@ def main():
 
 
     # Printing results after Neighbor Joining Method.
-    print neighbor_joining(nj_matrix, assoc_label)
-    print "\nDistance between especies:\n", dist_species
+    neighbor_joining(nj_matrix, assoc_label)
+    print dist_calculated_nodes
+    #print "\nDistance between especies:\n", dist_species
 
 if __name__ == "__main__":
     main()
