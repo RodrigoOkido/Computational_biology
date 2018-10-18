@@ -63,7 +63,7 @@ def simulated_annealing():
             new_x, new_y = generate_neighbor()
             new_sol = costB(new_x, new_y)
             ap = acceptance_probability(old_sol, new_sol, temp)
-            if ap > 0.6:
+            if ap > 0.75:
                 sol = round(new_sol,2)
                 locations.append(sol)
                 old_sol = new_sol
@@ -140,13 +140,13 @@ def calc_pairs(x,y):
 
 #Main function
 def main():
-    #simulated_annealing()
-    #print locations
+    simulated_annealing()
+    print locations
 
-    generate_population()
-    cross_population()
-    for j in range(len(population_X)):
-        print "( ",population_X[j].x, ",", population_X[j].y ," )"
+    # generate_population()
+    # cross_population()
+    # for j in range(len(population_X)):
+    #     print "( ",population_X[j].x, ",", population_X[j].y ," )"
 
 if __name__ == "__main__":
     main()

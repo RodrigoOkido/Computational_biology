@@ -141,13 +141,13 @@ def calc_pairs(x,y):
 
 #Main function
 def main():
-    #simulated_annealing()
-    #print locations
+    simulated_annealing()
+    print locations
 
-    generate_population()
-    cross_population()
-    for j in range(len(population_X)):
-        print "( ",population_X[j].x, ",", population_X[j].y ," )"
+    # generate_population()
+    # cross_population()
+    # for j in range(len(population_X)):
+    #     print "( ",population_X[j].x, ",", population_X[j].y ," )"
 
 if __name__ == "__main__":
     main()
