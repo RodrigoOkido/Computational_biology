@@ -108,7 +108,8 @@ def generate_population():
 
 def cross_population():
     counter = 0
-    while counter != 100:
+    run_times = 0
+    while counter != 50 or run_times < run_limit:
         for i in range(len(population_A)):
             for j in range(len(population_B)):
                 new_pair = Pair(population_A[i].x, population_B[j].y)
@@ -117,10 +118,21 @@ def cross_population():
                     population_X.append(new_pair)
                     counter += 1
                 else:
-                    population_B[j] = new_pair
-                if counter == 100:
+                    mutated = mutation(new_pair)
+                    population_B[j] = mutated
+                if counter == 50:
                     break
+        run_times += 1
 
+
+def mutation(pair):
+    mut_pair = pair
+    mut_prob = random.uniform(0.0,1.0)
+    if mut_prob > 0.75:
+        mut_pair.x = random.uniform(-10.0,10.0)
+        mut_pair.y = random.uniform(-10.0,10.0)
+        return mut_pair
+    return mut_pair
 
 def calc_pairs(x,y):
     return check_function_ackley(x,y)
