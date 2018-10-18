@@ -5,18 +5,19 @@ import random
 locations = []
 #Limit of iterations to reach the ideal solution
 run_limit = 50000
-#Euler constant user for Item A of List VI
-euler_a =  2.718
+#Euler constant used for Item B of List VI
+euler_b = 5.772156649
 
 
-#Function for item A
-def check_function_himmelblau(x, y):
-    return math.pow((math.pow(x,2)+y-11),2) + math.pow((x+math.pow(y,2)-7),2)
+#Function for item B
+def check_function_ackley(x, y):
+    euler_exp = -0.2*math.sqrt(math.pow(x,2)+math.pow(y,2))
+    result = math.pow(euler_b, euler_exp)
+    return -200*result
 
 
 ###################### SIMULATED ANNEALING ######################
-# Algoritmo de Trajetoria (Item A do exercicio 1 da lista VI)
-
+# Algoritmo de Trajetoria (Item A do exercicio 2 da lista VI)
 
 #Generate a random neighbor. This is a function to be used in Simulated Annealing.
 def generate_neighbor():
@@ -26,19 +27,18 @@ def generate_neighbor():
 
 #Function to determine the cost to move for the next position. Function to be
 #used in Simulated Annealing.
-def costA(x, y):
-    return check_function_himmelblau(x,y)
-
+def costB(x, y):
+    return check_function_ackley(x,y)
 
 #Funcion to verify the probability of the new solution to be accepted or not.
 #Function used in Simulated Aneealing.
 def acceptance_probability (old_cost, new_cost, temp):
-    if new_cost < old_cost:
+    if new_cost > old_cost:
         return 1.0
     else:
         calculate_exp = (new_cost - old_cost) / temp
         if calculate_exp < 0:
-            new_c = round(math.pow(euler_a,calculate_exp),2)
+            new_c = round(math.pow(euler_b,calculate_exp),2)
             if new_c < 0.01:
                 return 0
             else:
@@ -50,8 +50,7 @@ def acceptance_probability (old_cost, new_cost, temp):
 def simulated_annealing():
     first_x = random.uniform(-10.0,10.0)
     first_y = random.uniform(-10.0,10.0)
-    old_sol = costA(first_x, first_y)
-
+    old_sol = costB(first_x, first_y)
 
     #Setting parameters values (Temp, Temp_min and Alpha)
     temp = 1.0
@@ -62,7 +61,7 @@ def simulated_annealing():
         i = 1
         while i <= 100:
             new_x, new_y = generate_neighbor()
-            new_sol = costA(new_x, new_y)
+            new_sol = costB(new_x, new_y)
             ap = acceptance_probability(old_sol, new_sol, temp)
             if ap > 0.6:
                 sol = round(new_sol,2)
@@ -124,7 +123,7 @@ def cross_population():
 
 
 def calc_pairs(x,y):
-    return check_function_himmelblau(x,y)
+    return check_function_ackley(x,y)
 
 
 #Main function
