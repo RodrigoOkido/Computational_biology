@@ -113,7 +113,7 @@ def cross_population():
     pop_1 = population_A
     pop_2 = population_B
     pop_generated = []
-    while counter != 100:
+    while counter != 100 and run_times < run_limit:
         pop_generated = []
 
         pop_control = 0
@@ -129,8 +129,8 @@ def cross_population():
                 pop_generated.append(new_pair)
             if counter == 100:
                 break
-        if pop_control == 0:
 
+        if pop_control == 0:
             pop_2 = pop_generated
             pop_control = 1
         else:
