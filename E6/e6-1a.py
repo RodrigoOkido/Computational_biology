@@ -110,25 +110,39 @@ def generate_population():
 def cross_population():
     counter = 0
     run_times = 0
-    while counter != 100 or run_times < run_limit:
-        for i in range(len(population_A)):
-            for j in range(len(population_B)):
-                new_pair = Pair(population_A[i].x, population_B[j].y)
-                val = calc_pairs(new_pair.x, new_pair.y)
-                if val > -0.2 and val < 0.2:
-                    population_X.append(new_pair)
-                    counter += 1
-                else:
-                    mutated = mutation(new_pair)
-                    population_B[j] = mutated
-                if counter == 100:
-                    break
+    pop_1 = population_A
+    pop_2 = population_B
+    pop_generated = []
+    while counter != 100:
+        pop_generated = []
+
+        pop_control = 0
+        for i in range(len(pop_1)):
+            new_pair = Pair(pop_1[i].x, pop_2[i].y)
+            val = calc_pairs(new_pair.x, new_pair.y)
+            if val > -5 and val < 1:
+                population_X.append(new_pair)
+                pop_generated.append(new_pair)
+                counter += 1
+            else:
+                mutated = mutation(new_pair)
+                pop_generated.append(new_pair)
+            if counter == 100:
+                break
+        if pop_control == 0:
+
+            pop_2 = pop_generated
+            pop_control = 1
+        else:
+            pop_1 = pop_generated
+            pop_control = 0
+
         run_times += 1
 
 def mutation(pair):
     mut_pair = pair
     mut_prob = random.uniform(0.0,1.0)
-    if mut_prob > 0.75:
+    if mut_prob > 0.6:
         mut_pair.x = random.uniform(-10.0,10.0)
         mut_pair.y = random.uniform(-10.0,10.0)
         return mut_pair
@@ -141,13 +155,13 @@ def calc_pairs(x,y):
 
 #Main function
 def main():
-    simulated_annealing()
-    print locations
+    # simulated_annealing()
+    # print locations
 
-    # generate_population()
-    # cross_population()
-    # for j in range(len(population_X)):
-    #     print "( ",population_X[j].x, ",", population_X[j].y ," )"
+    generate_population()
+    cross_population()
+    for j in range(len(population_X)):
+        print "( ",population_X[j].x, ",", population_X[j].y ," )"
 
 if __name__ == "__main__":
     main()
