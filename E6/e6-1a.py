@@ -187,8 +187,8 @@ def main():
         for j in range(len(population_X)):
             print "( ",population_X[j].x, ",", population_X[j].y ," )"
 
-        print "Media : ", calc_media(population_X)
-        print "Desvio Padrao : ", calc_desvio_padrao(population_X)
+        print "Media (X,Y): ", calc_media(population_X)
+        print "Desvio Padrao (X,Y) : ", calc_desvio_padrao(population_X)
         print "\n"
         del population_A[:]
         del population_B[:]
