@@ -87,6 +87,8 @@ class Pair:
     self.x = x
     self.y = y
 
+
+# Function to calculate the average values of x and y of the final population generated.
 def calc_media(lista):
     if len(lista) == 0:
         return -1
@@ -99,6 +101,9 @@ def calc_media(lista):
         media_y += lista[i].y
     return media_x/size, media_y/size
 
+
+# Function to calculate the standard deviation values of x and y of the final
+# population generated
 def calc_desvio_padrao(lista):
     if len(lista) == 0:
         return -1
@@ -111,7 +116,7 @@ def calc_desvio_padrao(lista):
         dv_y += math.pow(lista[i].y - media_y,2)
     return math.sqrt(dv_x/len(lista)), math.sqrt(dv_y/len(lista))
 
-
+# Generate a two first population.
 def generate_population():
     for i in range(0,100):
         gen_x = random.uniform(-10.0,10.0)
@@ -131,6 +136,8 @@ def generate_population():
         population_B.append(generated)
 
 
+#Function to cross populations. This is the main function for the
+#genetic algorithm
 def cross_population():
     counter = 0
     run_times = 0
@@ -160,7 +167,7 @@ def cross_population():
             pop_control = 0
         run_times += 1
 
-
+# Function to make mutation of new descendants.
 def mutation(pair):
     mut_pair = pair
     mut_prob = random.uniform(0.0,1.0)
@@ -176,9 +183,11 @@ def calc_pairs(x,y):
 
 #Main function
 def main():
+    # For exercise A, just uncomment this section.
     # simulated_annealing()
     # print locations
 
+    #For exercise B, just uncomment this section.
     generate_population()
     cross_population()
     for j in range(len(population_X)):

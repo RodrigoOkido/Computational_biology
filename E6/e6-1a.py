@@ -85,12 +85,14 @@ population_A = []
 population_B = []
 population_X = []
 
+# Class Pair containing the position x and y (Coordinates).
 class Pair:
   def __init__(self, x, y):
     self.x = x
     self.y = y
 
 
+# Function to calculate the average values of x and y of the final population generated.
 def calc_media(lista):
     size = len(lista)
     media_x = 0
@@ -100,6 +102,8 @@ def calc_media(lista):
         media_y += lista[i].y
     return media_x/size, media_y/size
 
+# Function to calculate the standard deviation values of x and y of the final
+# population generated
 def calc_desvio_padrao(lista):
     media_x,media_y = calc_media(lista)
     dv_x = 0
@@ -110,7 +114,7 @@ def calc_desvio_padrao(lista):
     return math.sqrt(dv_x/len(lista)), math.sqrt(dv_y/len(lista))
 
 
-
+# Generate a two first population.
 def generate_population():
     for i in range(0,100):
         gen_x = random.uniform(-10.0,10.0)
@@ -129,7 +133,8 @@ def generate_population():
         generated = Pair(gen_x,gen_y)
         population_B.append(generated)
 
-
+#Function to cross populations. This is the main function for the
+#genetic algorithm
 def cross_population():
     counter = 0
     run_times = 0
@@ -162,6 +167,8 @@ def cross_population():
 
         run_times += 1
 
+
+# Function to make mutation of new descendants.
 def mutation(pair):
     mut_pair = pair
     mut_prob = random.uniform(0.0,1.0)
@@ -176,11 +183,13 @@ def calc_pairs(x,y):
     return check_function_himmelblau(x,y)
 
 
-#Main function
+# Main function
 def main():
+    # For exercise A, just uncomment this section.
     # simulated_annealing()
     # print locations
 
+    #For exercise B, just uncomment this section.
     for i in range(0,10):
         generate_population()
         cross_population()
