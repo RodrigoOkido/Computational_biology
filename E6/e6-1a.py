@@ -9,6 +9,7 @@ run_limit = 50000
 euler_a =  2.718
 
 
+
 #Function for item A
 def check_function_himmelblau(x, y):
     return math.pow((math.pow(x,2)+y-11),2) + math.pow((x+math.pow(y,2)-7),2)
@@ -79,6 +80,7 @@ def simulated_annealing():
 ###################### GENETIC ALGORITHMS ######################
 # Algoritmo baseado em populacaso (Item B do exercicio 2 da lista VI)
 
+
 population_A = []
 population_B = []
 population_X = []
@@ -87,6 +89,27 @@ class Pair:
   def __init__(self, x, y):
     self.x = x
     self.y = y
+
+
+def calc_media(lista):
+    size = len(lista)
+    media_x = 0
+    media_y = 0
+    for i in range(len(lista)):
+        media_x += lista[i].x
+        media_y += lista[i].y
+    return media_x/size, media_y/size
+
+def calc_desvio_padrao(lista):
+    media_x,media_y = calc_media(lista)
+    dv_x = 0
+    dv_y = 0
+    for i in range(len(lista)):
+        dv_x += math.pow(lista[i].x - media_x,2)
+        dv_y += math.pow(lista[i].y - media_y,2)
+    return math.sqrt(dv_x/len(lista)), math.sqrt(dv_y/len(lista))
+
+
 
 def generate_population():
     for i in range(0,100):
@@ -158,10 +181,18 @@ def main():
     # simulated_annealing()
     # print locations
 
-    generate_population()
-    cross_population()
-    for j in range(len(population_X)):
-        print "( ",population_X[j].x, ",", population_X[j].y ," )"
+    for i in range(0,10):
+        generate_population()
+        cross_population()
+        for j in range(len(population_X)):
+            print "( ",population_X[j].x, ",", population_X[j].y ," )"
+
+        print "Media : ", calc_media(population_X)
+        print "Desvio Padrao : ", calc_desvio_padrao(population_X)
+        print "\n"
+        del population_A[:]
+        del population_B[:]
+        del population_X[:]
 
 if __name__ == "__main__":
     main()

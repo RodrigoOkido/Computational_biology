@@ -87,6 +87,31 @@ class Pair:
     self.x = x
     self.y = y
 
+def calc_media(lista):
+    if len(lista) == 0:
+        return -1
+        
+    size = len(lista)
+    media_x = 0
+    media_y = 0
+    for i in range(len(lista)):
+        media_x += lista[i].x
+        media_y += lista[i].y
+    return media_x/size, media_y/size
+
+def calc_desvio_padrao(lista):
+    if len(lista) == 0:
+        return -1
+
+    media_x,media_y = calc_media(lista)
+    dv_x = 0
+    dv_y = 0
+    for i in range(len(lista)):
+        dv_x += math.pow(lista[i].x - media_x,2)
+        dv_y += math.pow(lista[i].y - media_y,2)
+    return math.sqrt(dv_x/len(lista)), math.sqrt(dv_y/len(lista))
+
+
 def generate_population():
     for i in range(0,100):
         gen_x = random.uniform(-10.0,10.0)
@@ -126,7 +151,7 @@ def cross_population():
                 pop_generated.append(new_pair)
             if counter == 100:
                 break
-                
+
         if pop_control == 0:
             pop_2 = pop_generated
             pop_control = 1
@@ -159,5 +184,11 @@ def main():
     for j in range(len(population_X)):
         print "( ",population_X[j].x, ",", population_X[j].y ," )"
 
+    print "Media : ", calc_media(population_X)
+    print "Desvio Padrao : ", calc_desvio_padrao(population_X)
+    print "\n"
+    del population_A[:]
+    del population_B[:]
+    del population_X[:]
 if __name__ == "__main__":
     main()
