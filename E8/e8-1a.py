@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-# Definition of centroids values.
+# Definition of centroids values in a list.
 centroids = []
 
 
