@@ -23,8 +23,8 @@ def generate_centroids(k):
 
 # Set the point to a cluster. Defined by the min calculated in Euclidian Distance.
 def define_point_to_cluster(distance, data_point, centroids):
-    index_of_minimum = min(distance, key=distance.get)
-    return [index_of_minimum, data_point, centroids[index_of_minimum]]
+    min_index = min(distance, key=distance.get)
+    return [min_index, data_point, centroids[min_index]]
 
 
 # Function to modify the centroids.
