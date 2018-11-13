@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # This program attend to read data from a csv file,
 # and apply kmean, then output the result.
 
@@ -13,14 +11,15 @@ import csv
 if __name__ == "__main__":
 
     # clusters
-    K = 3
+    K = 2
 
     data_arr = []
     meal_name_arr = []
 
-    with open('leukemia_big.csv', 'rb') as f:
+    # Output.csv is the transpose data of the leukemia_big
+    with open('output.csv', 'rb') as f:
         reader = csv.reader(f)
-        next(reader)
+        # next(reader)
         for row in reader:
             data_arr.append([float(x) for x in row[1:]])
             meal_name_arr.append([row[0]])
@@ -49,10 +48,9 @@ if __name__ == "__main__":
     for i in range(K):
         result_names = meal_name[idx==i, 0]
         counter = len(result_names)
-        print "================================="
         print "Cluster " + str(i+1)
-        # for name in result_names:
-        #     print name
+        for name in result_names:
+            print name
         print counter
 
 
