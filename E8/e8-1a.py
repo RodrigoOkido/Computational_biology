@@ -14,10 +14,13 @@ def euclidian_distance (x0, y0):
 
 # Function to generate centroids.
 # Randomic initials values between -3 and 3.
-def generate_centroids(k):
+def generate_centroids(k, data):
     gen_cent = []
     for i in range(k):
-        gen_cent.append(random.randint(-3,3))
+        index = random.randint(0,72)
+        cen = data[index]
+        cen = cen[1:]
+        gen_cent.append(np.mean(cen))
     return gen_cent
 
 
@@ -46,19 +49,35 @@ def k_means(data, centroids, total_iteration):
 
     # The number of centroids correspond to the k value (clusters).
     k = len(centroids)
-
     # Starts the k-means (Each iteration (First Loop)).
     for iteration in range(0, total_iteration):
         # Checking values in the csv file (Second Loop).
         for index_point in range(0, total_points):
             distance = {}
+            mean_line = []
             # Calculate the distance of each point between all centroids.
             for index_centroid in range(0, k):
-                distance[index_centroid] = euclidian_distance(data[index_point][iteration], centroids[index_centroid])
+                mean_line = data[index_point]
+                line_label = data[0]
+                mean_line = mean_line[1:]
+                distance[index_centroid] = euclidian_distance(np.mean(mean_line), centroids[index_centroid])
             # Includes the point to the cluster which are most closest of one centroid.
-            label = define_point_to_cluster(distance, data[index_point][iteration], centroids)
+            label = define_point_to_cluster(distance, np.mean(mean_line), centroids)
+            # DEBUG: print label
             # Insert the data point to the correct cluster.
-            clusters[label[0]].append(label[1])
+            if label[1] in clusters[label[0]]:
+                if label[0] == 1:
+                    clusters[1].remove(label[1])
+                    clusters[label[0]].append(label[1])
+                elif label[0] == 0:
+                    clusters[0].remove(label[1])
+                    clusters[label[0]].append(label[1])
+                else:
+                    clusters[2].remove(label[1])
+                    clusters[label[0]].append(label[1])
+            else:
+                clusters[label[0]].append(label[1])
+
             # Update centroids.
             centroids[label[0]] = new_centroids(label[1], centroids[label[0]])
 
@@ -70,12 +89,12 @@ if __name__ == "__main__":
     # Defining the K param for the k-means.
     K = 2
     # Opening and readning file.
-    with open('leukemia_big.csv', 'rb') as filename:
-        next(filename)
+    with open('output.csv', 'rb') as filename:
         data = np.genfromtxt(filename, delimiter=",")
         # [# DEBUG: ]print data
         # Defining the centroids.
-        centroids = generate_centroids(K)
+        centroids = generate_centroids(K, data)
+        # DEBUG: print centroids
         # Defining the iterations. How many iterations the algorithm will keep
         # running.
         total_iteration = 5
