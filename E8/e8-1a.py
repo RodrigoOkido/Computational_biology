@@ -44,6 +44,14 @@ def k_means(data, centroids, total_iteration):
     # List of list to store each cluster.
     clusters = [[] for i in range(len(centroids))]
 
+    #AML and ALL quantities:
+    aml_c1 = 0
+    all_c1 = 0
+    aml_c2 = 0
+    all_c2 = 0
+    aml_c3 = 0
+    all_c3 = 0
+
     # The size of the total data (In this case is the CSV file).
     total_points = len(data)
 
@@ -55,33 +63,39 @@ def k_means(data, centroids, total_iteration):
         for index_point in range(0, total_points):
             distance = {}
             mean_line = []
-            # Calculate the distance of each point between all centroids.
+            line_label = ""
+            # Calculate the distance of each point between all centroids and put
+            # on the dict distance.
             for index_centroid in range(0, k):
                 mean_line = data[index_point]
-                line_label = data[0]
+                line_label = str(data[0])
                 mean_line = mean_line[1:]
                 distance[index_centroid] = euclidian_distance(np.mean(mean_line), centroids[index_centroid])
             # Includes the point to the cluster which are most closest of one centroid.
             label = define_point_to_cluster(distance, np.mean(mean_line), centroids)
             # DEBUG: print label
             # Insert the data point to the correct cluster.
-            if label[1] in clusters[label[0]]:
-                if label[0] == 1:
-                    clusters[1].remove(label[1])
-                    clusters[label[0]].append(label[1])
-                elif label[0] == 0:
-                    clusters[0].remove(label[1])
-                    clusters[label[0]].append(label[1])
-                else:
-                    clusters[2].remove(label[1])
-                    clusters[label[0]].append(label[1])
-            else:
+            if label[1] not in clusters[label[0]]:
                 clusters[label[0]].append(label[1])
-
+                if label[0] == 0 and line_label == "ALL":
+                    all_c1 += 1
+                elif label[0] == 0 and line_label == "AML":
+                    aml_c1 += 1
+                elif label[0] == 1 and line_label == "ALL":
+                    all_c2 += 1
+                elif label[0] == 1 and line_label == "AML":
+                    aml_c2 += 1
+                elif label[0] == 2 and line_label == "ALL":
+                    all_c3 += 1
+                else:
+                    aml_c3 += 1
             # Update centroids.
             centroids[label[0]] = new_centroids(label[1], centroids[label[0]])
 
     # Return the clusters and the centroids.
+    print "ALL / AML Cluster 1: ", all_c1, "/", aml_c1
+    print "ALL / AML Cluster 2: ", all_c2, "/", aml_c2
+    print "ALL / AML Cluster 3: ", all_c3, "/", aml_c3
     return [clusters, centroids]
 
 # Main function.
