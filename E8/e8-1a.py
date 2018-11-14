@@ -17,9 +17,9 @@ def euclidian_distance (x0, y0):
 def generate_centroids(k, data):
     gen_cent = []
     for i in range(k):
-        index = random.randint(0,72)
-        cen = data[index]
-        cen = cen[1:]
+        index = random.randint(0,71)
+        cen = list(data[index])
+        cen = cen[2:]
         gen_cent.append(np.mean(cen))
     return gen_cent
 
@@ -57,6 +57,7 @@ def k_means(data, centroids, total_iteration):
 
     # The number of centroids correspond to the k value (clusters).
     k = len(centroids)
+
     # Starts the k-means (Each iteration (First Loop)).
     for iteration in range(0, total_iteration):
         # Checking values in the csv file (Second Loop).
@@ -66,10 +67,10 @@ def k_means(data, centroids, total_iteration):
             line_label = ""
             # Calculate the distance of each point between all centroids and put
             # on the dict distance.
+            mean_line = list(data[index_point])
+            line_label = str(mean_line[0])
+            mean_line = mean_line[2:]
             for index_centroid in range(0, k):
-                mean_line = data[index_point]
-                line_label = str(data[0])
-                mean_line = mean_line[1:]
                 distance[index_centroid] = euclidian_distance(np.mean(mean_line), centroids[index_centroid])
             # Includes the point to the cluster which are most closest of one centroid.
             label = define_point_to_cluster(distance, np.mean(mean_line), centroids)
@@ -104,7 +105,8 @@ if __name__ == "__main__":
     K = 2
     # Opening and readning file.
     with open('output.csv', 'rb') as filename:
-        data = np.genfromtxt(filename, delimiter=",")
+        data = np.genfromtxt(filename, delimiter=",", dtype=None)
+
         # [# DEBUG: ]print data
         # Defining the centroids.
         centroids = generate_centroids(K, data)
