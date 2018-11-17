@@ -104,7 +104,9 @@ def k_means(data, centroids, total_iteration):
 if __name__ == "__main__":
     # Defining the K param for the k-means (Change K value between 2 and 3).
     K = 3
-    # Opening and readning file.
+    
+    # Opening and reading file.
+    # Output.csv is the transpose data of the leukemia_big.csv
     with open('output.csv', 'rb') as filename:
         data = np.genfromtxt(filename, delimiter=",", dtype=None)
 

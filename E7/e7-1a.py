@@ -16,7 +16,8 @@ if __name__ == "__main__":
     data_arr = []
     meal_name_arr = []
 
-    # Output.csv is the transpose data of the leukemia_big
+    # Opening and reading file.
+    # Output.csv is the transpose data of the leukemia_big.csv
     with open('output.csv', 'rb') as f:
         reader = csv.reader(f)
         # next(reader)
