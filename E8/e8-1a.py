@@ -13,11 +13,10 @@ def euclidian_distance (x0, y0):
 
 
 # Function to generate centroids.
-# Randomic initials values between -3 and 3.
 def generate_centroids(k, data):
     gen_cent = []
     for i in range(k):
-        index = random.randint(0,71)
+        index = random.randint(1,71)
         cen = list(data[index])
         cen = cen[2:]
         gen_cent.append(np.mean(cen))
@@ -88,8 +87,10 @@ def k_means(data, centroids, total_iteration):
                     aml_c2 += 1
                 elif label[0] == 2 and line_label == "ALL":
                     all_c3 += 1
-                else:
+                elif label[0] == 2 and line_label == "AML":
                     aml_c3 += 1
+                else:
+                    continue
             # Update centroids.
             centroids[label[0]] = new_centroids(label[1], centroids[label[0]])
 
@@ -102,7 +103,7 @@ def k_means(data, centroids, total_iteration):
 # Main function.
 if __name__ == "__main__":
     # Defining the K param for the k-means (Change K value between 2 and 3).
-    K = 2
+    K = 3
     # Opening and readning file.
     with open('output.csv', 'rb') as filename:
         data = np.genfromtxt(filename, delimiter=",", dtype=None)

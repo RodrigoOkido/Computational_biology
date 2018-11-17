@@ -13,11 +13,10 @@ def euclidian_distance (x0, y0):
 
 
 # Function to generate centroids.
-# Randomic initials values between -3 and 3.
 def generate_centroids(k, data):
     gen_cent = []
     for i in range(k):
-        index = random.randint(0,71)
+        index = random.randint(1,71)
         cen = list(data[index])
         cen = cen[2:]
         gen_cent.append(np.mean(cen))
@@ -36,8 +35,15 @@ def new_centroids(clusters, centroids):
 
 
 # Function to build independent new sets selecting 3572 genes from the data randomly.
-# Need to pass per parameter the number of sets wanted.
-def build_random_groups(sets_number):
+# Need to pass per parameter the data and the number of sets wanted.
+def build_random_groups(data, sets_number):
+    sets = []
+
+    index = random.randint(1,71)
+
+    for i in sets_number:
+
+
     return 0
 
 
@@ -94,8 +100,10 @@ def k_means(data, centroids, total_iteration):
                     aml_c2 += 1
                 elif label[0] == 2 and line_label == "ALL":
                     all_c3 += 1
-                else:
+                elif label[0] == 2 and line_label == "AML"::
                     aml_c3 += 1
+                else:
+                    continue
             # Update centroids.
             centroids[label[0]] = new_centroids(label[1], centroids[label[0]])
 
