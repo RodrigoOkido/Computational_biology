@@ -34,17 +34,21 @@ def new_centroids(clusters, centroids):
     return np.array(clusters + centroids)/2
 
 
-# Function to build independent new sets selecting 3572 genes from the data randomly.
+# Function to build independent new sets selecting 3572 genes from the data
+# randomly. Is used to run k-means with subsets selected randomly inside
+# the data.
 # Need to pass per parameter the data and the number of sets wanted.
 def build_random_groups(data, sets_number):
-    sets = []
 
-    index = random.randint(1,71)
+    # List to store the lists of new independent sets included in data.
+    independent_sets = []
 
-    for i in sets_number:
+    for i in range (0, 100):
+        list_i = random.sample(data, 3572)
+        independent_sets.append(list_i)
+        
+    return independent_sets
 
-
-    return 0
 
 
 # Main function k-means.
@@ -117,7 +121,7 @@ def k_means(data, centroids, total_iteration):
 if __name__ == "__main__":
     # Defining the K param for the k-means (Change K value between 2 and 3).
     K = 2
-    
+
     # Opening and reading file.
     # Output.csv is the transpose data of the leukemia_big.csv
     with open('output.csv', 'rb') as filename:
