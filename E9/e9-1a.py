@@ -46,7 +46,7 @@ def build_random_groups(data, sets_number):
     for i in range (0, 100):
         list_i = random.sample(data, 3572)
         independent_sets.append(list_i)
-        
+
     return independent_sets
 
 
@@ -104,7 +104,7 @@ def k_means(data, centroids, total_iteration):
                     aml_c2 += 1
                 elif label[0] == 2 and line_label == "ALL":
                     all_c3 += 1
-                elif label[0] == 2 and line_label == "AML"::
+                elif label[0] == 2 and line_label == "AML":
                     aml_c3 += 1
                 else:
                     continue
