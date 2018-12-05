@@ -1,12 +1,5 @@
 ## E10 EXERCISE ##
 
-seq1 = "cctgatagacgctatctggctatccacgtacataggtcctctgtgcgaatctatgcgtttccaaccat"
-seq2 = "agtactggtgtacatttgatacgtacgtacaccggcaacctgaaacaaacgctcagaaccagaagtgc"
-seq3 = "aaaagtccgtgcaccctctttcttcgtggctctggccaacgagggctgatgtataagacgaaaatttt"
-seq4 = "agcctccgatgtaagtcatagctgtaactattacctgccacccctattacatcttacgtacgtataca"
-seq5 = "ctgttatacaacgcgtcatggcggggtatgcgttttggtcgtcgtacgctcgatcgttaacgtaggtc"
-
-
 def check_diff (seq1, seq2, max_diff):
 
     if len(seq1) == len(seq2):
@@ -37,32 +30,33 @@ def consensus ( list_seq ):
     total_dist = 0
 
 
-    for i in range(0,len(list_seq)):
+    for i in range(0,len(list_seq[0])):
         list_qtd = [0,0,0,0]
         score_column = 0
         dist_column = 0
 
-        for j in range(0, len(list_seq[i])):
-            if list_seq[j][i] == "a"
+        for j in range(0, len(list_seq)):
+            print list_seq[j][i]
+            if list_seq[j][i] == "a":
                 list_qtd[0] += 1
-            else if list_seq[i][j] == "t":
+            elif list_seq[j][i] == "t":
                 list_qtd[1] += 1
-            else if list_seq[i][j] == "c"
+            elif list_seq[j][i] == "c":
                 list_qtd[2] += 1
-            else if list_seq[i][j] == "g"
+            elif list_seq[j][i] == "g":
                 list_qtd[3] += 1
 
         l_idx = list_qtd.index(max(list_qtd))
         if l_idx == 0:
             consensus.append("a")
-        else if l_idx == 1:
+        elif l_idx == 1:
             consensus.append("t")
-        else if l_idx == 2:
+        elif l_idx == 2:
             consensus.append("c")
-        else if l_idx == 3:
+        elif l_idx == 3:
             consensus.append("g")
 
-        score_column = max (a_qtd, t_qtd, c_qtd, g_qtd)
+        score_column = max (list_qtd)
         dist_column = sum(list_qtd) - score_column
         score += score_column
         total_dist += dist_column
@@ -70,4 +64,48 @@ def consensus ( list_seq ):
     return consensus, score
 
 
+def find_seq (str1, list_seqs, max_mut, str_len):
+
+    tmp_output = [str1]
+
+    for j in range(0,len(list_seqs)):
+        str_l = list_seqs[j]
+        for k in range (0, len(str_l)):
+            cmp2 = str_l[k:k+str_len]
+            if check_diff(str1,cmp2,max_mut) == 1:
+                tmp_output.append(cmp2)
+                break
+
+
+    if len(tmp_output) != 5:
+        del tmp_output[:]
+        return -1
+
+    return tmp_output
+
 if __name__ == "__main__":
+
+    cmp = ""
+    seq1 = "cctgatagacgctatctggctatccacgtacataggtcctctgtgcgaatctatgcgtttccaaccat"
+    seq2 = "agtactggtgtacatttgatacgtacgtacaccggcaacctgaaacaaacgctcagaaccagaagtgc"
+    seq3 = "aaaagtccgtgcaccctctttcttcgtggctctggccaacgagggctgatgtataagacgaaaatttt"
+    seq4 = "agcctccgatgtaagtcatagctgtaactattacctgccacccctattacatcttacgtacgtataca"
+    seq5 = "ctgttatacaacgcgtcatggcggggtatgcgttttggtcgtcgtacgctcgatcgttaacgtaggtc"
+
+    final_output = []
+    best_score = []
+    all_subseqs = []
+    list_seqs = [seq2,seq3,seq4,seq5]
+
+    for i in range(0, len(seq1)):
+        cmp = seq1[i:i+3]
+        final_output = find_seq(cmp, list_seqs, 1, 3)
+        if final_output != -1:
+            cns, scr = consensus(final_output)
+            all_subseqs.append(cns)
+            best_score.append(scr)
+
+
+    bs = best_score.index(max(best_score))
+    fr = all_subseqs[bs]
+    print "Final Result: ", fr, "\nScore: ", best_score[bs]
