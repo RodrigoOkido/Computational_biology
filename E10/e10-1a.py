@@ -36,32 +36,32 @@ def consensus ( list_seq ):
     score = 0
     total_dist = 0
 
-
+    print len(list_seq)
     for i in range(0,len(list_seq[0])):
         list_qtd = [0,0,0,0]
         score_column = 0
         dist_column = 0
 
         for j in range(0, len(list_seq)):
-            print list_seq[j][i]
             if list_seq[j][i] == "a":
                 list_qtd[0] += 1
-            elif list_seq[j][i] == "t":
-                list_qtd[1] += 1
             elif list_seq[j][i] == "c":
-                list_qtd[2] += 1
+                list_qtd[1] += 1
             elif list_seq[j][i] == "g":
+                list_qtd[2] += 1
+            elif list_seq[j][i] == "t":
                 list_qtd[3] += 1
 
         l_idx = list_qtd.index(max(list_qtd))
+
         if l_idx == 0:
             consensus.append("a")
         elif l_idx == 1:
-            consensus.append("t")
-        elif l_idx == 2:
             consensus.append("c")
-        elif l_idx == 3:
+        elif l_idx == 2:
             consensus.append("g")
+        elif l_idx == 3:
+            consensus.append("t")
 
         score_column = max (list_qtd)
         dist_column = sum(list_qtd) - score_column
@@ -99,6 +99,12 @@ def find_seq (str1, list_seqs, max_mut, str_len):
 if __name__ == "__main__":
 
     cmp = ""
+
+    ############################# PARAMS TO MODIFY #############################
+    size = 8
+    max_diff = 2
+    ############################################################################
+
     seq1 = "cctgatagacgctatctggctatccacgtacataggtcctctgtgcgaatctatgcgtttccaaccat"
     seq2 = "agtactggtgtacatttgatacgtacgtacaccggcaacctgaaacaaacgctcagaaccagaagtgc"
     seq3 = "aaaagtccgtgcaccctctttcttcgtggctctggccaacgagggctgatgtataagacgaaaatttt"
@@ -110,9 +116,10 @@ if __name__ == "__main__":
     all_subseqs = []
     list_seqs = [seq2,seq3,seq4,seq5]
 
+
     for i in range(0, len(seq1)):
-        cmp = seq1[i:i+3]
-        final_output = find_seq(cmp, list_seqs, 1, 3)
+        cmp = seq1[i:i+size]
+        final_output = find_seq(cmp, list_seqs, max_diff, size)
         if final_output != -1:
             cns, scr = consensus(final_output)
             all_subseqs.append(cns)
