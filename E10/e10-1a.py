@@ -35,11 +35,13 @@ def consensus ( list_seq ):
     consensus = []
     score = 0
     total_dist = 0
-    score_column = 0
-    dist_column = 0
+
 
     for i in range(0,len(list_seq)):
         list_qtd = [0,0,0,0]
+        score_column = 0
+        dist_column = 0
+
         for j in range(0, len(list_seq[i])):
             if list_seq[j][i] == "a"
                 list_qtd[0] += 1
@@ -52,15 +54,20 @@ def consensus ( list_seq ):
 
         l_idx = list_qtd.index(max(list_qtd))
         if l_idx == 0:
-            consensus[i] = "a"
+            consensus.append("a")
         else if l_idx == 1:
-            consensus[i] = "t"
+            consensus.append("t")
         else if l_idx == 2:
-            consensus[i] = "c"
+            consensus.append("c")
         else if l_idx == 3:
-            consensus[i] = "g"
+            consensus.append("g")
 
         score_column = max (a_qtd, t_qtd, c_qtd, g_qtd)
         dist_column = sum(list_qtd) - score_column
         score += score_column
         total_dist += dist_column
+
+    return consensus, score
+
+
+if __name__ == "__main__":
