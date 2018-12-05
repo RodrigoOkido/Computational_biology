@@ -38,16 +38,10 @@ def new_centroids(clusters, centroids):
 # randomly. Is used to run k-means with subsets selected randomly inside
 # the data.
 # Need to pass per parameter the data and the number of sets wanted.
-def build_random_groups(data, sets_number):
-
+def build_random_groups(data, start_index):
     # List to store the lists of new independent sets included in data.
-    independent_sets = []
-
-    for i in range (0, 100):
-        list_i = random.sample(data, 3572)
-        independent_sets.append(list_i)
-
-    return independent_sets
+    independent_set =  data[:,start_index[:,0]]
+    return independent_set
 
 
 
@@ -108,35 +102,59 @@ def k_means(data, centroids, total_iteration):
                     aml_c3 += 1
                 else:
                     continue
+
             # Update centroids.
             centroids[label[0]] = new_centroids(label[1], centroids[label[0]])
-
     # Return the clusters and the centroids.
     print "ALL / AML Cluster 1: ", all_c1, "/", aml_c1
     print "ALL / AML Cluster 2: ", all_c2, "/", aml_c2
-    print "ALL / AML Cluster 3: ", all_c3, "/", aml_c3
+    if k == 3:
+        print "ALL / AML Cluster 3: ", all_c3, "/", aml_c3
+
     return [clusters, centroids]
 
 # Main function.
 if __name__ == "__main__":
+
     # Defining the K param for the k-means (Change K value between 2 and 3).
     K = 2
+    independent_sets = {}
 
     # Opening and reading file.
     # Output.csv is the transpose data of the leukemia_big.csv
-    with open('output.csv', 'rb') as filename:
-        data = np.genfromtxt(filename, delimiter=",", dtype=None)
+    for i in range(0, 100):
+        rand_nb = random.randint(1,3557)
+        with open('output.csv', 'rb') as filename:
+            labels = np.genfromtxt(filename, delimiter=',', usecols=0, dtype=None)
+            filename.seek(0)
+            raw_data = np.genfromtxt(filename, delimiter=',', usecols=range(rand_nb, rand_nb+3572), dtype=float)
+            # data = [ [np.append(label,row)] for label, row in zip(labels, raw_data)]
+            data = []
+            for k in range(0,len(labels)):
+                tr = list(labels[k].split(" "))
+                # print tr
+                tr.extend(raw_data[k])
+                data.append(tr)
+            # print labels
+            independent_sets[k] = data
 
-        # [# DEBUG: ]print data
-        # Defining the centroids.
-        centroids = generate_centroids(K, data)
-        # DEBUG: print centroids
-        # Defining the iterations. How many iterations the algorithm will keep
-        # running.
-        total_iteration = 5
+            # print data
+            # Defining the centroids.
 
-        # Executes the k-means algorithm.
-        [clusters, new_centroids] = k_means(data, centroids, total_iteration)
-        # Return the clusters with the number of points in each one.
-        for i in range(len(centroids)):
-            print "Cluster ", i , ":", len(clusters[i])
+            # new_sets = build_random_groups(data, 100)
+            centroids = generate_centroids(K, data)
+            # DEBUG: print centroids
+            # Defining the iterations. How many iterations the algorithm will keep
+            # running.
+            total_iteration = 5
+
+            # Executes the k-means algorithm.
+            [clusters, new_centroids] = k_means(data, centroids, total_iteration)
+            # Return the clusters with the number of points in each one.
+            for j in range(len(centroids)):
+                print "Cluster ", j , ":", len(clusters[j])
+
+            del data[:]
+            del clusters[:]
+            del new_centroids[:]
+            filename.seek(0)
