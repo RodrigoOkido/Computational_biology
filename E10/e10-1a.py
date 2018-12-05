@@ -1,5 +1,10 @@
 ## E10 EXERCISE ##
 
+# Function to check the difference between two sequences.
+# The "max-diff" parameter is the max limit of the number of
+# mutation allowed in one sequence. If max_diff = 3, and
+# comparing seq1 and seq2 we obtain 3 or lower characters different,
+# we accept the result.
 def check_diff (seq1, seq2, max_diff):
 
     if len(seq1) == len(seq2):
@@ -22,7 +27,9 @@ def check_diff (seq1, seq2, max_diff):
         return -1
 
 
-
+# Function to give the consensus of all list of sequences obtained.
+# The sequence list received will be compared and the result will
+# return for the user.
 def consensus ( list_seq ):
 
     consensus = []
@@ -64,6 +71,10 @@ def consensus ( list_seq ):
     return consensus, score
 
 
+# Function to find in all list of sequences the ocurrence of "str1".
+# Use the check_diff function to check for any mutation in the string
+# and returns 1 if the difference is inside the interval defined by
+# max_mut (max mutations).
 def find_seq (str1, list_seqs, max_mut, str_len):
 
     tmp_output = [str1]
@@ -83,6 +94,8 @@ def find_seq (str1, list_seqs, max_mut, str_len):
 
     return tmp_output
 
+
+# Main function.
 if __name__ == "__main__":
 
     cmp = ""
