@@ -36,7 +36,6 @@ def consensus ( list_seq ):
     score = 0
     total_dist = 0
 
-    print len(list_seq)
     for i in range(0,len(list_seq[0])):
         list_qtd = [0,0,0,0]
         score_column = 0
